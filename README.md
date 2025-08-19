@@ -60,13 +60,15 @@ wget https://huggingface.co/Damo-vision/JCo-MVTON/resolve/main/try_on_lower.pt
 
 # Download the dress model checkpoint
 wget https://huggingface.co/Damo-vision/JCo-MVTON/resolve/main/try_on_dress.pt
+
 ```
 
 ## Basic Usage
 
 ```
-# Load transformer with additional branches
-
+# Load transformer
+model_id = "black-forest-labs/FLUX.1-dev"
+wt = 'ckpts/try_on_upper.pt'
 transformer = FluxTransformer2DModel.from_pretrained(
 model_id,
 torch_dtype=torch_dtype,
