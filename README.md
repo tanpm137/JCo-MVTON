@@ -5,7 +5,7 @@
 [![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/xxxx.xxxxx)
 [![Homepage](https://img.shields.io/badge/Homepage-Visit_My_Site-orange)](https://damocv.github.io/JCo-MVTON.github.io/)
 [![Checkpoints](https://img.shields.io/badge/Checkpoints-HuggingFace-yellow)](https://huggingface.co/Damo-vision/JCo-MVTON)
-[![Demo](https://img.shields.io/badge/API-Link-green)](https://market.aliyun.com/apimarket/detail/cmapi00067129?spm=5176.shop.result.2.6e323934OAW8XR&innerSource=search)
+[![Demo](https://img.shields.io/badge/Demo-Link-green)](https://market.aliyun.com/apimarket/detail/cmapi00067129?spm=5176.shop.result.2.6e323934OAW8XR&innerSource=search)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 </div>
