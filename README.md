@@ -21,7 +21,9 @@ Aowen Wang¹, Wei Li¹, Hao Luo¹ ², Mengxing Ao¹, Fan Wang¹
 ## Overview
 
 JCo-MVTON introduces a novel framework for mask-free virtual try-on based on MM-DiT that addresses key limitations of existing systems: rigid dependencies on human body masks, limited fine-grained control over garment attributes, and poor generalization to in-the-wild scenarios.
-
+<div align="center">
+    <img src="./framework.png" alt="Overview" width="600"/>
+</div>
 ## Quick Start
 
 #### Clone the repository
@@ -122,6 +124,9 @@ vutils.save_image(concatenated_tensor, 'output.png')
 
 
 ## Results
+<div align="center">
+    <img src="./overview.png" alt="Overview" width="600"/>
+</div>
 
 JCo-MVTON achieves state-of-the-art performance across multiple metrics:
 
