@@ -3,181 +3,127 @@
 <div align="center">
 
 [![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/xxxx.xxxxx)
-[![Code](https://img.shields.io/badge/Code-GitHub-green)](https://github.com/username/JCo-MVTON)
-[![Demo](https://img.shields.io/badge/Demo-HuggingFace-yellow)](https://huggingface.co/spaces/username/jco-mvton)
+[![Homepage](https://img.shields.io/badge/Homepage-Visit_My_Site-orange)](https://damocv.github.io/JCo-MVTON.github.io/)
+[![Checkpoints](https://img.shields.io/badge/Checkpoints-HuggingFace-yellow)](https://huggingface.co/Damo-vision/JCo-MVTON)
+[![Demo](https://img.shields.io/badge/API-Link-green)](https://market.aliyun.com/apimarket/detail/cmapi00067129?spm=5176.shop.result.2.6e323934OAW8XR&innerSource=search)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 </div>
+<div align="center">
 
-## Authors
+Aowen Wang¹, Wei Li¹, Hao Luo¹ ², Mengxing Ao¹, Fan Wang¹
 
-**Aowen Wang¹**, **Wei Li¹**, **Hao Luo¹ ²**, **Mengxing Ao¹**, **Fan Wang¹**
-
-¹DAMO Academy, Alibaba Group  
+¹DAMO Academy, Alibaba Group
 ²Hupan Lab
+
+</div>
 
 ## Overview
 
-JCo-MVTON introduces a novel framework for mask-free virtual try-on that addresses key limitations of existing systems: rigid dependencies on human body masks, limited fine-grained control over garment attributes, and poor generalization to in-the-wild scenarios.
-
-### Key Features
-
-- **🚫 Mask-Free Operation**: Eliminates the need for human body masks, enabling more flexible and practical applications
-- **🎯 Multi-Modal Control**: Integrates diverse control signals including reference images and garment images
-- **🔄 Bidirectional Generation**: Novel data curation strategy using complementary Try-Off and mask-based models
-- **⚡ Transformer Architecture**: Leverages Multi-Modal Diffusion Transformer (MM-DiT) backbone for superior performance
-- **🎨 Fine-Grained Control**: Precise control over garment attributes and fitting characteristics
-
-### Architecture Highlights
-
-Our core innovation lies in the **Joint MM-DiT architecture** that:
-- Fuses reference and garment information directly into self-attention layers
-- Uses dedicated conditional pathways for multi-modal integration
-- Employs specialized positional encodings and attention masks for virtual try-on tasks
-- Processes noise and conditional features through three parallel branches
+JCo-MVTON introduces a novel framework for mask-free virtual try-on based on MM-DiT that addresses key limitations of existing systems: rigid dependencies on human body masks, limited fine-grained control over garment attributes, and poor generalization to in-the-wild scenarios.
 
 ## Quick Start
 
-### Installation
+#### Clone the repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/username/JCo-MVTON.git
+git clone https://github.com/damo-cv/JCo-MVTON.git
 cd JCo-MVTON
-
-# Create conda environment
-conda create -n jco-mvton python=3.8
-conda activate jco-mvton
-
-# Install dependencies
-pip install -r requirements.txt
 ```
 
-### Download Pre-trained Models
+#### Create conda environment
 
 ```bash
-# Download the main model checkpoint
-wget https://huggingface.co/username/jco-mvton/resolve/main/jco_mvton_checkpoint.pth
-
-# Download auxiliary models (Try-Off model)
-wget https://huggingface.co/username/jco-mvton/resolve/main/try_off_model.pth
+conda create -n jco-mvton python=3.10
+conda activate jco-mvton
 ```
 
-### Basic Usage
+#### Install dependencies
 
-```python
-from jco_mvton import JCoMVTON
-import torch
-from PIL import Image
+```bash
+pip install -r requirements.txt
+git clone https://github.com/huggingface/diffusers.git
+cd diffusers
+git checkout v0.33.0
+cp flux/modeling_utils.py   diffusers/src/diffusers/models
+pip install .
+```
 
-# Initialize the model
-model = JCoMVTON.from_pretrained("path/to/checkpoint")
-model.eval()
+#### Download Pre-trained Models
 
-# Load images
-reference_image = Image.open("path/to/reference_person.jpg")
-garment_image = Image.open("path/to/garment.jpg")
+```bash
+# Download the upper model checkpoint
+wget https://huggingface.co/Damo-vision/JCo-MVTON/resolve/main/try_on_upper.pt
 
-# Generate try-on result
-with torch.no_grad():
-    result = model.generate(
-        reference_image=reference_image,
-        garment_image=garment_image,
-        prompt="A person wearing the garment",
-        num_inference_steps=50,
-        guidance_scale=7.5
-    )
+# Download the lower model checkpoint
+wget https://huggingface.co/Damo-vision/JCo-MVTON/resolve/main/try_on_lower.pt
+
+# Download the dress model checkpoint
+wget https://huggingface.co/Damo-vision/JCo-MVTON/resolve/main/try_on_dress.pt
+```
+
+## Basic Usage
+
+```
+# Load transformer with additional branches
+
+transformer = FluxTransformer2DModel.from_pretrained(
+model_id,
+torch_dtype=torch_dtype,
+subfolder="transformer",
+extra_branch_num=extra_branch_num,
+low_cpu_mem_usage=False,
+).to(device)
+
+# Load and preprocess images
+
+person = Image.open('assets/ref.jpg').convert("RGB").resize((width, height))
+cloth = Image.open('assets/upper.jpg').convert("RGB").resize((height, height))
+
+person_tensor = transform_person(person)
+cloth_tensor = transform_cloth(cloth)
+
+prompt = "A fashion model wearing stylish clothing, high-resolution 8k, detailed textures, realistic lighting, fashion photography style."
+
+# Generate image
+
+with torch.inference_mode():
+generated_image = pipe(
+generator=torch.Generator(device="cpu").manual_seed(seed),
+prompt=prompt,
+num_inference_steps=n_steps,
+guidance_scale=guidance_scale,
+height=height,
+width=width,
+cloth_img=cloth_tensor,
+person_img=person_tensor,
+extra_branch_num=extra_branch_num,
+mode=mode,
+max_sequence_length=77,
+).images[0]
 
 # Save result
-result.save("try_on_result.jpg")
+
+person_tensor = transform_output(person)
+cloth_tensor = transform_output(cloth)
+generated_tensor = transform_output(generated_image)
+
+concatenated_tensor = torch.cat((cloth_tensor, person_tensor, generated_tensor), dim=2)
+vutils.save_image(concatenated_tensor, 'output.png')
 ```
 
-### Advanced Usage
 
-```python
-# With additional control parameters
-result = model.generate(
-    reference_image=reference_image,
-    garment_image=garment_image,
-    prompt="A person wearing the garment",
-    num_inference_steps=50,
-    guidance_scale=7.5,
-    # Advanced parameters
-    garment_guidance_scale=1.5,
-    reference_guidance_scale=1.2,
-    seed=42
-)
-```
-
-## Training
-
-### Data Preparation
-
-The training data follows our bi-directional generation strategy:
-
-1. **Stage I**: Bootstrap raw pool using Try-Off and mask-based models
-2. **Stage II**: Iterative refinement with human-in-the-loop filtering
-
-```bash
-# Prepare training data
-python prepare_data.py --config configs/data_prep.yaml
-
-# Train the model
-python train.py --config configs/train_config.yaml
-```
-
-### Training Configuration
-
-```yaml
-# configs/train_config.yaml
-model:
-  type: "JCoMVTON"
-  mm_dit_layers: 28
-  hidden_dim: 1152
-  num_heads: 16
-
-training:
-  batch_size: 16
-  learning_rate: 1e-4
-  num_epochs: 100
-  gradient_accumulation_steps: 4
-```
-
-## Evaluation
-
-```bash
-# Run evaluation on test dataset
-python evaluate.py --config configs/eval_config.yaml --checkpoint path/to/checkpoint
-
-# Generate comparison results
-python compare_methods.py --methods jco_mvton,baseline1,baseline2
-```
-
-## Dataset
-
-Our training approach uses a carefully curated dataset through:
-- **Try-Off Model**: Generates garment images via self-supervision
-- **Mask-based Model**: Produces reference images
-- **ICLoRA**: Injects style diversity for domain expansion
-- **Human-in-the-loop**: Quality filtering and refinement
 
 ## Results
 
 JCo-MVTON achieves state-of-the-art performance across multiple metrics:
 
-| Method | FID ↓ | LPIPS ↓ | SSIM ↑ | User Preference ↑ |
-|--------|--------|---------|--------|-------------------|
-| Baseline-1 | 45.2 | 0.312 | 0.721 | 23.1% |
-| Baseline-2 | 41.8 | 0.298 | 0.735 | 31.5% |
-| **JCo-MVTON** | **38.7** | **0.281** | **0.752** | **45.4%** |
-
-## Model Architecture
-
-The Joint MM-DiT consists of:
-- **Multi-Modal Fusion**: Parallel processing of noise, reference, and garment features
-- **Conditional Self-Attention**: Specialized attention mechanisms for try-on tasks
-- **Positional Encodings**: Custom encodings for spatial garment-person alignment
-- **Feature Integration**: Cross-modal feature fusion at multiple scales
+| Methods | Paired | Paired | Paired |Paired  | Unpaired| Unpaired |
+|---------|--------|-----|-------|----------|-----|-------|
+|         | SSIM ↑ | FID ↓ | KID ↓ | LPIPS ↓ | FID ↓ | KID ↓ |
+| MV-VTON (Wang et al., 2025b) | 0.8083 | 15.442 | 7.501 | 0.1171 | 17.900 | 3.861 |
+| OOTDiffusion (Xu et al., 2024) | 0.8187 | 9.305 | 4.086 | 0.0876 | 12.408 | 4.689 |
+| JCo-MVTON (Ours) | 0.8601 | 8.103 | 2.003 | 0.0891 | 9.561 | 2.700 |
 
 ## Citation
 
@@ -199,15 +145,3 @@ This project is released under the [Apache 2.0 license](LICENSE).
 ## Acknowledgments
 
 We thank the open-source community for their valuable contributions and the reviewers for their constructive feedback. Special thanks to the DAMO Academy and Hupan Lab for supporting this research.
-
-## Contact
-
-For questions and collaborations, please contact:
-- Aowen Wang: [aowen.wang@alibaba-inc.com](mailto:aowen.wang@alibaba-inc.com)
-- Wei Li: [wei.li@alibaba-inc.com](mailto:wei.li@alibaba-inc.com)
-
----
-
-<div align="center">
-⭐ If you find JCo-MVTON helpful, please star our repository! ⭐
-</div>
