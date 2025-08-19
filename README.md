@@ -24,6 +24,7 @@ JCo-MVTON introduces a novel framework for mask-free virtual try-on based on MM-
 <div align="center">
     <img src="assets/framework.jpg" alt="Overview" width="600"/>
 </div>
+
 ## Quick Start
 
 #### Clone the repository
