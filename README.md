@@ -68,7 +68,7 @@ wget https://huggingface.co/Damo-vision/JCo-MVTON/resolve/main/try_on_dress.pt
 ```
 # Load transformer
 model_id = "black-forest-labs/FLUX.1-dev"
-wt = 'ckpts/try_on_upper.pt'
+ckpt = 'ckpts/try_on_upper.pt'
 transformer = FluxTransformer2DModel.from_pretrained(
 model_id,
 torch_dtype=torch_dtype,
@@ -76,7 +76,12 @@ subfolder="transformer",
 extra_branch_num=extra_branch_num,
 low_cpu_mem_usage=False,
 ).to(device)
-
+transformer.load_state_dict(torch.load(ckpt)['module'], strict=False)
+pipe = FluxPipeline.from_pretrained(
+    model_id, 
+    torch_dtype=torch_dtype,
+    transformer=transformer,
+).to(device)
 # Load and preprocess images
 
 person = Image.open('assets/ref.jpg').convert("RGB").resize((width, height))
