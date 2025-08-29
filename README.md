@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/xxxx.xxxxx)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/2508.17614)
 [![Homepage](https://img.shields.io/badge/Homepage-Visit_My_Site-orange)](https://damocv.github.io/JCo-MVTON.github.io/)
 [![Checkpoints](https://img.shields.io/badge/Checkpoints-HuggingFace-yellow)](https://huggingface.co/Damo-vision/JCo-MVTON)
 [![Demo](https://img.shields.io/badge/Demo-Link-green)](https://market.aliyun.com/apimarket/detail/cmapi00067129?spm=5176.shop.result.2.6e323934OAW8XR&innerSource=search)
@@ -143,11 +143,14 @@ JCo-MVTON achieves state-of-the-art performance across multiple metrics:
 If you find our work useful, please cite:
 
 ```bibtex
-@article{wang2024jco,
-  title={JCo-MVTON: Jointly Controllable Multi-Modal Diffusion Transformer for Mask-Free Virtual Try-on},
-  author={Wang, Aowen and Li, Wei and Luo, Hao and Ao, Mengxing and Wang, Fan},
-  journal={arXiv preprint arXiv:xxxx.xxxxx},
-  year={2024}
+@misc{wang2025jcomvtonjointlycontrollablemultimodal,
+      title={JCo-MVTON: Jointly Controllable Multi-Modal Diffusion Transformer for Mask-Free Virtual Try-on}, 
+      author={Aowen Wang and Wei Li and Hao Luo and Mengxing Ao and Chenyu Zhu and Xinyang Li and Fan Wang},
+      year={2025},
+      eprint={2508.17614},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2508.17614}, 
 }
 ```
 
