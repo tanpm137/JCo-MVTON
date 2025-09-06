@@ -1,0 +1,16 @@
+model_path: /raid/ltnghia01/tanpm/JCo-MVTON/FLUX.1-dev
+model_weight_dress: /raid/ltnghia01/tanpm/JCo-MVTON/try_on_dress.pt
+model_weight_upper: /raid/ltnghia01/tanpm/JCo-MVTON/try_on_upper.pt
+
+data_set_path: /raid/ltnghia01/tanpm/dataset_test
+result_path: /raid/ltnghia01/tanpm/JCo-MVTON/results
+seed: 42
+
+extra_branch_num: 2
+bz: 8
+guidance_scale: 3.5
+n_steps: 30
+mode: 2
+
+image_height: 1024
+image_width: 768
