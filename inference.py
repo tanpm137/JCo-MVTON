@@ -32,6 +32,8 @@ images_path = os.path.join(data_set_path, "growth_truth")
 garments_path = os.path.join(data_set_path, "test_garments")
 result_path = args.result_path
 
+if not os.path.exists(model_path):
+    raise ValueError("Model root not exists!")
 if not os.path.exists(wt_dress):
     raise ValueError("Weight dress root not exists!")
 if not os.path.exists(wt_upper):
