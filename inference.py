@@ -87,11 +87,11 @@ pipe_dress = FluxPipeline.from_pretrained(
     transformer=make_transformer(wt_dress),
 ).to(device)
 
-pipe_upper = FluxPipeline.from_pretrained(
-    model_path, 
-    torch_dtype=torch_dtype,
-    transformer=make_transformer(wt_upper),
-).to(device)
+# pipe_upper = FluxPipeline.from_pretrained(
+#     model_path, 
+#     torch_dtype=torch_dtype,
+#     transformer=make_transformer(wt_upper),
+# ).to(device)
 
 if __name__ == '__main__':
     
@@ -105,14 +105,16 @@ if __name__ == '__main__':
             
             _ = next(csv_reader)
             for row in csv_reader:
+                
+                if row[3] == 'upper':
+                    # pipe = pipe_upper
+                    continue
+                else:
+                    pipe = pipe_dress
+                
                 image_path = os.path.join(images_path, row[0])
                 garment_path = os.path.join(garments_path, row[1])
                 object_type = "top clothes" if row[3] == "upper" else "dress"
-                
-                if row[3] == 'upper':
-                    pipe = pipe_upper
-                else:
-                    pipe = pipe_dress
                 
                 print(f"\nProcessing person image: {row[0]} | garment image: {row[1]} | class: {object_type}")
                 
