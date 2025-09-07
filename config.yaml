@@ -1,4 +1,4 @@
-model_path: /raid/ltnghia01/tanpm/JCo-MVTON/FLUX.1-dev
+model_path: black-forest-labs/FLUX.1-dev
 model_weight_dress: /raid/ltnghia01/tanpm/JCo-MVTON/try_on_dress.pt
 model_weight_upper: /raid/ltnghia01/tanpm/JCo-MVTON/try_on_upper.pt
 
