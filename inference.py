@@ -42,7 +42,7 @@ if not os.path.exists(wt_upper):
 def make_transformer(trained_weight):
     transformer = FluxTransformer2DModel.from_pretrained(model_path,
                                                          torch_dtype=torch_dtype,
-                                                         subfolder="transformer",
+                                                         subfolder="transformer_merged",
                                                          extra_branch_num=extra_branch_num,
                                                          low_cpu_mem_usage=False).to(device)
     for j in range(extra_branch_num):
