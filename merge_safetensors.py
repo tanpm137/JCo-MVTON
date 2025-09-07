@@ -4,7 +4,12 @@ from safetensors.torch import load_file, save_file
 from tqdm import tqdm
 
 sharded_folder = "/raid/ltnghia01/tanpm/JCo-MVTON/FLUX.1-dev/transformer/"
-output_file = "/raid/ltnghia01/tanpm/JCo-MVTON/FLUX.1-dev/transformer_merged/diffusion_pytorch_model.safetensors"
+output_folder = "/raid/ltnghia01/tanpm/JCo-MVTON/FLUX.1-dev/transformer_merged"
+
+output_file = os.path.join(output_folder, "diffusion_pytorch_model.safetensors")
+
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
 
 print(f"Merge safetensors file: {sharded_folder}")
 
