@@ -81,17 +81,17 @@ transform_cloth = transforms.Compose([
     transforms.Normalize([0.5], [0.5])
 ])
 
-pipe_dress = FluxPipeline.from_pretrained(
-    model_path, 
-    torch_dtype=torch_dtype,
-    transformer=make_transformer(wt_dress),
-).to(device)
-
-# pipe_upper = FluxPipeline.from_pretrained(
+# pipe_dress = FluxPipeline.from_pretrained(
 #     model_path, 
 #     torch_dtype=torch_dtype,
-#     transformer=make_transformer(wt_upper),
+#     transformer=make_transformer(wt_dress),
 # ).to(device)
+
+pipe_upper = FluxPipeline.from_pretrained(
+    model_path, 
+    torch_dtype=torch_dtype,
+    transformer=make_transformer(wt_upper),
+).to(device)
 
 if __name__ == '__main__':
     
@@ -107,10 +107,10 @@ if __name__ == '__main__':
             for row in csv_reader:
                 
                 if row[3] == 'upper':
-                    # pipe = pipe_upper
-                    continue
+                    pipe = pipe_upper
                 else:
-                    pipe = pipe_dress
+                    # pipe = pipe_dress
+                    continue
                 
                 image_path = os.path.join(images_path, row[0])
                 garment_path = os.path.join(garments_path, row[1])
